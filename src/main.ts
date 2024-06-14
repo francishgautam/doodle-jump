@@ -1,24 +1,31 @@
 import './style.css';
 
 // Game Board Settings
-let canvas;
+let canvas : HTMLCanvasElement;
 let canvasWidth = 360;
 let canvasHeight = 576;
-let ctx;
+let ctx : CanvasRenderingContext2D;
 
 // Doodler Settings
 let doodlerSize = { width: 46, height: 46 };
 let doodlerPos = { x: canvasWidth / 2 - doodlerSize.width / 2, y: canvasHeight * 7 / 8 - doodlerSize.height };
-let doodlerRightImage;
-let doodlerLeftImage;
+let doodlerRightImage : HTMLImageElement;
+let doodlerLeftImage : HTMLImageElement;
 
-let doodler = {
+let doodler: {
+    img: HTMLImageElement | null;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+} = {
     img: null,
-    x: doodlerPos.x,
-    y: doodlerPos.y,
-    width: doodlerSize.width,
-    height: doodlerSize.height
+    x: 0,
+    y: 0,
+    width: 50,
+    height: 50
 };
+
 
 // Physics Settings
 let velX = 0;
@@ -27,27 +34,36 @@ let startVelY = -8;
 let gravity = 0.4;
 
 // Platform Settings
-let platforms = [];
+interface Platform {
+    img : HTMLImageElement | null;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+let platforms: Platform[] = [];
+
 let platformSize = { width: 60, height: 18 };
-let platformImage;
+let platformImage : HTMLImageElement;
 
 //Score parameters
-let currentScore = 0;
-let topScore = 0;
-let isGameOver = false;
+let currentScore : number = 0;
+let topScore : number = 0;
+let isGameOver : boolean = false;
 
 window.onload = function() {
-    canvas = document.getElementById("board");
+    canvas = document.getElementById("board") as HTMLCanvasElement;
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
-    ctx = canvas.getContext("2d");
+    ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     // Load images
     doodlerRightImage = new Image();
     doodlerRightImage.src = "/doodler-right.png";
-    doodler.img = doodlerRightImage;
+    doodler.img  = doodlerRightImage as HTMLImageElement;
     doodlerRightImage.onload = function() {
-        ctx.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
+        ctx.drawImage(doodlerRightImage, doodler.x, doodler.y, doodler.width, doodler.height);
 }
 
     doodlerLeftImage = new Image();
@@ -104,7 +120,7 @@ function gameLoop() {
     updateScore();
     ctx.fillStyle = "black";
     ctx.font = "16px sans-serif";
-    ctx.fillText(currentScore, 5, 20);
+    ctx.fillText(currentScore ,  5, 20);
 
     if (isGameOver) {
         ctx.fillText("Game Over: Press 'Space' to Restart", canvasWidth / 7, canvasHeight * 7 / 8);
@@ -159,7 +175,7 @@ function addNewPlatform() {
     platforms.push(platform);
 }
 
-function checkCollision(a, b) {
+function checkCollision(a :any, b: any ) {
     return a.x < b.x + b.width &&
            a.x + a.width > b.x &&
            a.y < b.y + b.height &&
