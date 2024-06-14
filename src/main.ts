@@ -13,13 +13,13 @@ let doodlerRightImage : HTMLImageElement;
 let doodlerLeftImage : HTMLImageElement;
 
 let doodler: {
-    img: HTMLImageElement | null;
+    img : HTMLImageElement | null,
     x: number;
     y: number;
     width: number;
     height: number;
 } = {
-    img: null,
+    img : null,
     x: 0,
     y: 0,
     width: 50,
@@ -35,7 +35,7 @@ let gravity = 0.4;
 
 // Platform Settings
 interface Platform {
-    img : HTMLImageElement | null;
+    img : HTMLImageElement;
     x: number;
     y: number;
     width: number;
@@ -48,7 +48,7 @@ let platformSize = { width: 60, height: 18 };
 let platformImage : HTMLImageElement;
 
 //Score parameters
-let currentScore : number = 0;
+let currentScore : any = 0;
 let topScore : number = 0;
 let isGameOver : boolean = false;
 
@@ -61,9 +61,9 @@ window.onload = function() {
     // Load images
     doodlerRightImage = new Image();
     doodlerRightImage.src = "/doodler-right.png";
-    doodler.img  = doodlerRightImage as HTMLImageElement;
+    doodler.img = doodlerRightImage as HTMLImageElement;
     doodlerRightImage.onload = function() {
-        ctx.drawImage(doodlerRightImage, doodler.x, doodler.y, doodler.width, doodler.height);
+        ctx.drawImage(doodler.img as CanvasImageSource, doodler.x, doodler.y, doodler.width, doodler.height);
 }
 
     doodlerLeftImage = new Image();
@@ -97,7 +97,7 @@ function gameLoop() {
     if (doodler.y > canvas.height) {
         isGameOver = true;
     }
-    ctx.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
+    ctx.drawImage(doodler.img as CanvasImageSource, doodler.x, doodler.y, doodler.width, doodler.height);
 
     // Move platforms
     platforms.forEach(platform => {
@@ -127,7 +127,7 @@ function gameLoop() {
     }
 }
 
-function controlDoodler(e) {
+function controlDoodler(e :any) {
     if (e.code === "ArrowRight" || e.code === "KeyD") {
         velX = 4;
         doodler.img = doodlerRightImage;
